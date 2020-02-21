@@ -1,4 +1,6 @@
 import win32com.client
+import pandas as pd
+import xlrd
 import os
 outlook=win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
 inbox=outlook.GetDefaultFolder(6) #Inbox default index value is 6
@@ -25,5 +27,11 @@ def getMessagesFromOutlook():
         messageDict['senderAddress'] = message.Sender.Address
         print(messageDict['to'])
 
+def getDictionaryFromExcel():
+    file_path = 'C:\Hackathon\Sioen Del 20 departments.xlsx'
+    df = pd.read_excel(file_path, encoding='utf-16')
+    print (df.to_dict())
 
+getDictionaryFromExcel()
 getMessagesFromOutlook()
+
