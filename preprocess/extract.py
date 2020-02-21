@@ -1,4 +1,6 @@
 import win32com.client
+import pandas as pd
+import xlrd
 import os
 import pandas as pd
 outlook=win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
@@ -32,7 +34,7 @@ def getMessagesFromOutlook():
         messageDict['recipients'] = message.Recipients
         messageDict['sender'] = message.Sender
         messageDict['senderAddress'] = message.Sender.Address
-        print(messageDict['to'])
+        #print(messageDict['to'])
         messageDictArr.append(messageDict)
 
     return messageDictArr
@@ -58,4 +60,37 @@ def dictToPandas(messageDicts):
 
 
 
+def getDictionaryFromExcel():
+    print(os.getcwd())
+    projectPath = os.getcwd()
+    file_path = projectPath + '/Sioen Del 20 departments.xlsx'
+    df = pd.read_excel(file_path, encoding='utf-16')
+    dfSliced = df.loc[:,'To':'Department']
+
+    return dfSliced
+
+def matchDictWithLabel():
+    for message in messageDictArr:
+        message['label'] = sales
+
+def test():
+
+    # Opvragen departementen
+    dfSliced = getDictionaryFromExcel()
+    for department in dfSliced:
+        department = dfSliced['Department']
+        print(department)
+
+    # Opvragen persoonsnamen in to
+    messageDictArr = getMessagesFromOutlook()
+    for message in messageDictArr:
+        name = message['to']
+
+        if name in dfSliced[key]:
+            message['to'] = ts
+            print(message)
+
+#test()
+#getDictionaryFromExcel()
+#getMessagesFromOutlook()
 
