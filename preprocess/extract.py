@@ -1,5 +1,6 @@
 import win32com.client
 import os
+import pandas as pd
 outlook=win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
 inbox=outlook.GetDefaultFolder(6) #Inbox default index value is 6
 folder = outlook.Folders[1]
@@ -35,6 +36,25 @@ def getMessagesFromOutlook():
         messageDictArr.append(messageDict)
 
     return messageDictArr
+
+
+getMessagesFromOutlook()
+
+
+
+def dictToPandas(messageDicts):
+    dict = {'col1' : [], 'col2' : []}
+    for message in messageDicts:
+        dict['col1'].append(message['body'])
+        dict['col2'].append(message['label'])
+
+    df = pd.DataFrame.from_dict(dict)
+    return df
+
+
+
+
+
 
 
 
