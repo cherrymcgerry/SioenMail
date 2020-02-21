@@ -5,14 +5,11 @@ import win32com.client
 
 import os
 import pandas as pd
-import SioenMail.businessRules.businessruleNew
+import SioenMail.businessRules.businessrule
 
-outlook=win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
-inbox=outlook.GetDefaultFolder(6) #Inbox default index value is 6
+outlook= win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
+inbox= outlook.GetDefaultFolder(6) #Inbox default index value is 6
 folder = outlook.Folders[1]
-
-
-
 
 
 #method to get all messages from outlook into a readable format
@@ -40,12 +37,12 @@ def getMessagesFromOutlook():
         messageDict['sender'] = message.Sender
         messageDict['senderAddress'] = message.Sender.Address
         #print(messageDict['to'])
-        SioenMail.businessRules.businessruleNew.getKeywordsFromBody(messageDict['body'])
+        SioenMail.businessRules.businessrule.getKeywordsFromBody(messageDict['body'])
         messageDictArr.append(messageDict)
 
     return messageDictArr
 
-
+getMessagesFromOutlook()
 
 
 
@@ -106,8 +103,8 @@ def matchDictWithLabel(messageDictArr):
             print(ex)
     return messageDictArr
 
-#print(getDataInDataframe())
-#test()
-#getDictionaryFromExcel()
-#getMessagesFromOutlook()
+print(getDataInDataframe())
+test()
+getDictionaryFromExcel()
+getMessagesFromOutlook()
 
