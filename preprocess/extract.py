@@ -21,6 +21,7 @@ folder = outlook.Folders[1]
 #sender
 #senderAddress
 def getMessagesFromOutlook():
+    print("getting emails from outlook")
     outlook = win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
     root = outlook.Folders[1]
     sentItems = folder.Folders[1]
@@ -40,15 +41,20 @@ def getMessagesFromOutlook():
     return messageDictArr
 
 
-getMessagesFromOutlook()
 
 
 
 def dictToPandas(messageDicts):
+    print("mapping dictionaries to panda dataframe")
+
     dict = {'col1' : [], 'col2' : []}
-    for message in messageDicts:
-        dict['col1'].append(message['body'])
-        dict['col2'].append(message['label'])
+    try:
+        for message in messageDicts:
+            if 'label' in message and 'body' in  message:
+                dict['col1'].append(message['body'])
+                dict['col2'].append(message['label'])
+    except Exception as ex:
+        print(ex)
 
     df = pd.DataFrame.from_dict(dict)
     return df
@@ -56,11 +62,19 @@ def dictToPandas(messageDicts):
 
 
 
+#todo split into test and train, split into sentences instead of whole body(messagesToDicts)
+def getDataInDataframe():
+    print("getting data")
 
+    messagesDict = getMessagesFromOutlook()
+    messagesWLabelsDict = matchDictWithLabel(messagesDict)
+    df = dictToPandas(messagesWLabelsDict)
+    return df
 
 
 
 def getDictionaryFromExcel():
+    print("getting departments")
     print(os.getcwd())
     projectPath = os.getcwd()
     file_path = projectPath + '/Sioen Del 20 departments.xlsx'
@@ -69,27 +83,22 @@ def getDictionaryFromExcel():
 
     return dfSliced
 
-def matchDictWithLabel():
+def matchDictWithLabel(messageDictArr):
+    print("matching messages with departments")
+    dfLabels = getDictionaryFromExcel()
     for message in messageDictArr:
-        message['label'] = sales
 
-def test():
+        try:
+            to = message['to']
+            loc = dfLabels.loc[dfLabels['To']==to].index[0]
+            department = dfLabels.iloc[loc,1]
+            message['label'] = department
 
-    # Opvragen departementen
-    dfSliced = getDictionaryFromExcel()
-    for department in dfSliced:
-        department = dfSliced['Department']
-        print(department)
+        except Exception as ex:
+            print(ex)
+    return messageDictArr
 
-    # Opvragen persoonsnamen in to
-    messageDictArr = getMessagesFromOutlook()
-    for message in messageDictArr:
-        name = message['to']
-
-        if name in dfSliced[key]:
-            message['to'] = ts
-            print(message)
-
+print(getDataInDataframe())
 #test()
 #getDictionaryFromExcel()
 #getMessagesFromOutlook()
