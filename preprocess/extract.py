@@ -1,8 +1,12 @@
 import win32com.client
-import pandas as pd
-import xlrd
+
+# import pandas as pd
+# import xlrd
+
 import os
 import pandas as pd
+import SioenMail.businessRules.businessruleNew
+
 outlook=win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
 inbox=outlook.GetDefaultFolder(6) #Inbox default index value is 6
 folder = outlook.Folders[1]
@@ -36,6 +40,7 @@ def getMessagesFromOutlook():
         messageDict['sender'] = message.Sender
         messageDict['senderAddress'] = message.Sender.Address
         #print(messageDict['to'])
+        SioenMail.businessRules.businessruleNew.getKeywordsFromBody(messageDict['body'])
         messageDictArr.append(messageDict)
 
     return messageDictArr
