@@ -44,6 +44,7 @@ def getMessagesFromOutlook():
 
 
 
+
 def dictToPandas(messageDicts):
     print("mapping dictionaries to panda dataframe")
 
@@ -92,13 +93,15 @@ def matchDictWithLabel(messageDictArr):
             to = message['to']
             loc = dfLabels.loc[dfLabels['To']==to].index[0]
             department = dfLabels.iloc[loc,1]
-            message['label'] = department
+            #TODO change department into int!!
+            #message['label'] = department
+            message['label'] = 1
 
         except Exception as ex:
             print(ex)
     return messageDictArr
 
-print(getDataInDataframe())
+#print(getDataInDataframe())
 #test()
 #getDictionaryFromExcel()
 #getMessagesFromOutlook()
