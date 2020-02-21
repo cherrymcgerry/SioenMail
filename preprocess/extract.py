@@ -10,7 +10,15 @@ folder = outlook.Folders[1]
 
 
 
-
+#method to get all messages from outlook into a readable format
+#connects to outlook through pywin32
+#return array of message dictionaries with format:
+#to
+#subject
+#body
+#recipients
+#sender
+#senderAddress
 def getMessagesFromOutlook():
     outlook = win32com.client.Dispatch("Outlook.Application").GetNameSpace("MAPI")
     root = outlook.Folders[1]
@@ -26,12 +34,19 @@ def getMessagesFromOutlook():
         messageDict['sender'] = message.Sender
         messageDict['senderAddress'] = message.Sender.Address
         print(messageDict['to'])
+        messageDictArr.append(messageDict)
+
+    return messageDictArr
+
+
 
 def getDictionaryFromExcel():
-    file_path = 'C:\Hackathon\Sioen Del 20 departments.xlsx'
+    print(os.getcwd())
+    projectPath = os.getcwd()
+    file_path = projectPath + '/Sioen Del 20 departments.xlsx'
     df = pd.read_excel(file_path, encoding='utf-16')
     print (df.to_dict())
 
 getDictionaryFromExcel()
-getMessagesFromOutlook()
+#getMessagesFromOutlook()
 
