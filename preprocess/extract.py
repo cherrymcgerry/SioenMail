@@ -33,7 +33,7 @@ def getMessagesFromOutlook():
         messageDict['recipients'] = message.Recipients
         messageDict['sender'] = message.Sender
         messageDict['senderAddress'] = message.Sender.Address
-        print(messageDict['to'])
+        #print(messageDict['to'])
         messageDictArr.append(messageDict)
 
     return messageDictArr
@@ -45,8 +45,32 @@ def getDictionaryFromExcel():
     projectPath = os.getcwd()
     file_path = projectPath + '/Sioen Del 20 departments.xlsx'
     df = pd.read_excel(file_path, encoding='utf-16')
-    print (df.to_dict())
+    dfSliced = df.loc[:,'To':'Department']
 
-getDictionaryFromExcel()
+    return dfSliced
+
+def matchDictWithLabel():
+    for message in messageDictArr:
+        message['label'] = sales
+
+def test():
+
+    # Opvragen departementen
+    dfSliced = getDictionaryFromExcel()
+    for department in dfSliced:
+        department = dfSliced['Department']
+        print(department)
+
+    # Opvragen persoonsnamen in to
+    messageDictArr = getMessagesFromOutlook()
+    for message in messageDictArr:
+        name = message['to']
+
+        if name in dfSliced[key]:
+            message['to'] = ts
+            print(message)
+
+#test()
+#getDictionaryFromExcel()
 #getMessagesFromOutlook()
 
